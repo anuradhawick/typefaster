@@ -1,4 +1,3 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
   Component,
   ElementRef,
@@ -15,12 +14,12 @@ import {
   map,
   take,
 } from 'rxjs';
-import {
-  WordsContainerComponent,
-} from './words-container/words-container.component';
+import { WordsContainerComponent } from './words-container/words-container.component';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { History } from '../../interfaces/typist';
+import { StoryEntry } from '../../interfaces/story';
+import { WordsLoaderService } from './services/words-loader.service';
 
 const createCountdown = (seconds: number): ReplaySubject<number> => {
   const countdown$ = new ReplaySubject<number>(1);
@@ -42,23 +41,20 @@ const createCountdown = (seconds: number): ReplaySubject<number> => {
   selector: 'app-typist-page',
   standalone: true,
   imports: [
-    HttpClientModule,
     WordsContainerComponent,
     FormsModule,
     AsyncPipe,
     DatePipe,
     DecimalPipe,
   ],
+  providers: [WordsLoaderService],
   templateUrl: './typist-page.component.html',
   styleUrl: './typist-page.component.scss',
 })
 export class TypistPageComponent implements OnInit, OnDestroy {
   @ViewChild('wordsContainer') wordsContainer: WordsContainerComponent;
   @ViewChild('input') inputEditor: ElementRef;
-  protected story: Object | null = null;
-  protected case: boolean = false;
-  protected special: boolean = false;
-  protected randomise: boolean = false;
+  protected story: StoryEntry | null = null;
   protected time: number = 0;
   protected words: string[] = [];
   protected timer: ReplaySubject<number>;
@@ -72,21 +68,15 @@ export class TypistPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient
+    private ws: WordsLoaderService
   ) {}
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
-      this.case = !!params.get('case');
-      this.special = !!params.get('special');
-      this.randomise = !!params.get('randomise');
-      this.time = 0.1; //parseInt(params.get('time') as any);
-      this.http
-        .get(`/assets/stories/${params.get('story')}.json`)
-        .subscribe((story: any) => {
-          this.story = story;
-          this.words = (story.story as string).split(' ');
-        });
+      this.time = parseInt(params.get('time') as string);
+      this.ws.load(params)?.subscribe(([story, words]) => {
+        (this.story = story), (this.words = words);
+      });
     });
 
     this.inputSubscription = this.input.subscribe((value: string) => {
@@ -132,7 +122,7 @@ export class TypistPageComponent implements OnInit, OnDestroy {
     }
     const str = (event.target as HTMLInputElement).value.trim();
     this.wordsContainer.peekWord(str);
-    if (event.code === 'Space') {
+    if (event.code === 'Space' || event.key === 'Enter') {
       this.input.next(str);
       (event.target as HTMLInputElement).value = '';
     }

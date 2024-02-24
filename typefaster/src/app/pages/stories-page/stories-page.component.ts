@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { StorySummaryEntry } from '../../interfaces/story';
 
 @Component({
   selector: 'app-stories-page',
@@ -11,13 +12,13 @@ import { RouterLink } from '@angular/router';
   styleUrl: './stories-page.component.scss',
 })
 export class StoriesPageComponent implements OnInit {
-  protected stories: any[] = [];
+  protected stories: StorySummaryEntry[] = [];
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.http
-      .get('/assets/stories/summary.json')
-      .subscribe((stories: any) => (this.stories = stories));
+      .get<StorySummaryEntry[]>('/assets/stories/summary.json')
+      .subscribe(stories => (this.stories = stories));
   }
 }

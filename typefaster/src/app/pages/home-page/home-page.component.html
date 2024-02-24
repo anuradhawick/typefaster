@@ -1,1 +1,12 @@
-<app-setup (start)="start($event)" />
+<div class="text-center">
+  <h4>Welcome to TypeFaster typing practice!</h4>
+</div>
+<hr />
+<div class="mx-auto">
+  <img
+    src="/assets/logo.webp"
+    class="img-fluid mx-auto d-block"
+    alt="logo"
+    style="max-width: 100%" />
+</div>
+<app-setup (start)="start($any($event))" />

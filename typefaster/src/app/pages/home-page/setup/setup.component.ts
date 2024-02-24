@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { StorySummaryEntry } from '../../../interfaces/story';
+import { TypistConfig } from '../../../interfaces/config';
 
 @Component({
   selector: 'app-setup',
@@ -17,7 +18,7 @@ import { StorySummaryEntry } from '../../../interfaces/story';
   styleUrl: './setup.component.scss',
 })
 export class SetupComponent implements OnInit {
-  @Output() start = new EventEmitter<any>();
+  @Output() configCompleted = new EventEmitter<TypistConfig>();
   protected form: FormGroup;
   protected stories: StorySummaryEntry[] = [];
 
@@ -26,17 +27,30 @@ export class SetupComponent implements OnInit {
     private http: HttpClient
   ) {
     this.form = this.fb.group({
-      story: this.fb.control(1, [Validators.required]),
+      story: this.fb.control('1', [Validators.required]),
       case: this.fb.control(true, [Validators.required]),
-      special: this.fb.control(true, [Validators.required]),
+      special: this.fb.control(false, [Validators.required]),
       randomise: this.fb.control(false, [Validators.required]),
       time: this.fb.control(1, [Validators.min(1), Validators.max(5)]),
     });
   }
 
   ngOnInit(): void {
+    this.form.controls['story'].valueChanges.subscribe(
+      (story: string | number) => {
+        if (story === 'numbers') {
+          this.form.controls['case'].disable();
+          this.form.controls['special'].disable();
+          this.form.controls['randomise'].disable();
+        } else {
+          this.form.controls['case'].enable();
+          this.form.controls['special'].enable();
+          this.form.controls['randomise'].enable();
+        }
+      }
+    );
     this.http
-      .get('/assets/stories/summary.json')
-      .subscribe(stories => (this.stories = stories as StorySummaryEntry[]));
+      .get<StorySummaryEntry[]>('/assets/stories/summary.json')
+      .subscribe(stories => (this.stories = stories));
   }
 }

@@ -32,7 +32,20 @@ Add a `story.txt` plain text file that contains the actual story.
 
 Now run `process_stories.py` script to generate the story related content inside the angular app.
 
+## Development Guide
+
+Use `pnpm` to install angular dependencies.
+
 ## Deployment Guide
+
+Run the following commands before deploying to ensure clean code.
+
+```bash
+pnpm run pretty
+ng lint --fix
+```
+
+All runs must be completed without errors before deployment and code committing.
 
 Terraform state bucket is managed outside of the program. So it must be imported.
 

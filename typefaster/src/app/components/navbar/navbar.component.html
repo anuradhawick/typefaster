@@ -1,6 +1,6 @@
 <nav ngbNav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" [routerLink]="[]">
+    <a class="navbar-brand fs-4 fst-italic" [routerLink]="[]">
       <img
         src="/assets/logo.webp"
         alt="logo"
@@ -21,10 +21,11 @@
           <li [ngbNavItem]="link.fragment">
             <a
               ngbNavLink
+              class="fs-5"
               [routerLinkActive]="'active'"
-              [routerLink]="link.fragment"
-              >{{ link.title }}</a
-            >
+              [routerLink]="link.fragment">
+              <i class="bi bi-{{ link.icon }}-fill"></i> {{ link.title }}
+            </a>
           </li>
         }
       </ul>
@@ -33,8 +34,9 @@
           type="checkbox"
           class="form-check-input"
           role="switch"
-          (change)="themeService.toggle()" />
-        @if (themeService.theme === 'light') {
+          [checked]="theme === 'dark'"
+          (change)="ts.toggle($any($event).target.checked)" />
+        @if (theme === 'light') {
           <i class="bi bi-brightness-high-fill"></i>
         } @else {
           <i class="bi bi-moon-stars-fill icon-white"></i>

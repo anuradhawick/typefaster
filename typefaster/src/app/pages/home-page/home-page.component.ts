@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SetupComponent } from './setup/setup.component';
 import { Router, RouterModule } from '@angular/router';
+import { TypistConfig } from '../../interfaces/config';
 
 @Component({
   selector: 'app-home-page',
@@ -11,7 +12,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class HomePageComponent {
   constructor(private router: Router) {}
-  start(config: any) {
+  start(config: TypistConfig) {
     this.router.navigate(['/typist'], { queryParams: config });
   }
 }

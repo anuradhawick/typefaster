@@ -1,13 +1,9 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  ActivatedRoute,
-  Router,
-  RouterLink,
-  RouterModule,
-} from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
+import { StoryEntry } from '../../interfaces/story';
 
 @Component({
   selector: 'app-story-page',
@@ -17,7 +13,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './story-page.component.scss',
 })
 export class StoryPageComponent implements OnInit, OnDestroy {
-  protected story: any = null;
+  protected story: StoryEntry;
   private queryParamsSubscription: Subscription;
 
   constructor(
@@ -29,7 +25,7 @@ export class StoryPageComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(params => {
       const index = params.get('id');
       this.http
-        .get(`/assets/stories/${index}.json`)
+        .get<StoryEntry>(`/assets/stories/${index}.json`)
         .subscribe(story => (this.story = story));
     });
   }

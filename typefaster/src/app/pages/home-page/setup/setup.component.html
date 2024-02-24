@@ -1,20 +1,17 @@
+<hr />
 <form [formGroup]="form">
-  <div class="mx-auto">
-    <img
-      src="/assets/logo.webp"
-      class="img-fluid mx-auto d-block"
-      style="max-width: 100%" />
+  <div class="form-floating">
+    <select
+      class="form control form-select form-select"
+      formControlName="story"
+      id="story">
+      <option [value]="'numbers'">Practice typing numbers</option>
+      @for (story of stories; track $index) {
+        <option [value]="story.index">{{ story.title }}</option>
+      }
+    </select>
+    <label for="story">Select your story</label>
   </div>
-  <hr />
-  <div class="text-center">
-    <h4>Welcome to TypeFast typing practice!</h4>
-  </div>
-  <hr />
-  <select class="form-select form-select-lg" formControlName="story">
-    @for (story of stories; track $index) {
-      <option [value]="story.index">{{ story.title }}</option>
-    }
-  </select>
   <hr />
   <div class="container-fluid p-0">
     <div class="row">
@@ -24,8 +21,9 @@
             class="form-check-input"
             type="checkbox"
             role="switch"
-            formControlName="case" />
-          <label class="form-check-label">Case sensitive</label>
+            formControlName="case"
+            id="case" />
+          <label class="form-check-label" for="case">Case sensitive</label>
         </div>
       </div>
       <div class="col-md-4 col-12">
@@ -34,8 +32,11 @@
             class="form-check-input"
             type="checkbox"
             role="switch"
-            formControlName="special" />
-          <label class="form-check-label">Allow special chars</label>
+            formControlName="special"
+            id="allowspecial" />
+          <label class="form-check-label" for="allowspecial"
+            >Allow special chars</label
+          >
         </div>
       </div>
       <div class="col-md-4 col-12">
@@ -44,8 +45,11 @@
             class="form-check-input"
             type="checkbox"
             role="switch"
-            formControlName="randomise" />
-          <label class="form-check-label">Randomise word order</label>
+            formControlName="randomise"
+            id="randomise" />
+          <label class="form-check-label" for="randomise"
+            >Randomise word order</label
+          >
         </div>
       </div>
     </div>
@@ -67,7 +71,7 @@
         type="button"
         class="btn btn-primary btn-lg"
         [disabled]="form.invalid"
-        (click)="start.emit(form.value)">
+        (click)="configCompleted.emit(form.value)">
         Start
       </button>
     </div>

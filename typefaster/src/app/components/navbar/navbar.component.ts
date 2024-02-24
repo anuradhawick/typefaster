@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import {
   NgbCollapseModule,
@@ -20,16 +20,25 @@ import { ThemeService } from '../../services/theme.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
-export class NavbarComponent {
-  isMenuCollapsed = true;
-  links = [
-    { title: 'Home', fragment: 'home' },
-    { title: 'Stories', fragment: 'stories' },
-    { title: 'About', fragment: 'about' },
+export class NavbarComponent implements OnInit {
+  protected isMenuCollapsed = true;
+  protected links = [
+    { title: 'Home', fragment: 'home', icon: 'house-door' },
+    { title: 'Stories', fragment: 'stories', icon: 'bookmark' },
+    { title: 'About', fragment: 'about', icon: 'file-person' },
   ];
-  themeService: ThemeService;
+  protected theme: string;
 
-  constructor(ts: ThemeService) {
-    this.themeService = ts;
+  constructor(
+    protected ts: ThemeService,
+    private cd: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.ts.theme.subscribe(theme => {
+      this.theme = theme;
+      // because we use SSR for development
+      this.cd.detectChanges();
+    });
   }
 }

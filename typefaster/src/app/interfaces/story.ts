@@ -3,3 +3,10 @@ export interface StorySummaryEntry {
   title: string;
   index: number;
 }
+
+export interface StoryEntry {
+  images: string[];
+  title: string;
+  prompt: string;
+  story: string;
+}
