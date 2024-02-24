@@ -1,6 +1,8 @@
 # _TypeFaster_
 
+<p align="center">
 <img src="./typefaster/src/assets/logo.webp" width="400px" style="display: block; margin: 0 auto;">
+</p>
 
 Visit: [https://typefaster.anuradhawick.com](https://typefaster.anuradhawick.com)
 
