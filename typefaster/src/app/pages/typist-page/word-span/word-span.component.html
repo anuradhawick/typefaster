@@ -1,0 +1,11 @@
+<div
+  class="d-inline-block overflow-hidden user-select-none"
+  style="height: 55px">
+  <span
+    class="fs-1"
+    [class.text-danger]="color === 'wrong'"
+    [class.text-success]="color === 'correct'"
+    [class.text-bg-info]="active"
+    >{{ word }}</span
+  >&nbsp;&nbsp;
+</div>

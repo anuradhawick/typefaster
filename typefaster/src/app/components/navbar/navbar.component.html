@@ -34,7 +34,7 @@
           class="form-check-input"
           role="switch"
           (change)="themeService.toggle()" />
-        @if (themeService.theme == 'light') {
+        @if (themeService.theme === 'light') {
           <i class="bi bi-brightness-high-fill"></i>
         } @else {
           <i class="bi bi-moon-stars-fill icon-white"></i>

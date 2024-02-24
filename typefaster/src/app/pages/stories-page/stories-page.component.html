@@ -1,0 +1,15 @@
+<!-- <app-spinner /> -->
+<div class="row row-gap-1">
+  @for (story of stories; track story) {
+    <div class="col-12 col-sm-4">
+      <a class="text-decoration-none" [routerLink]="['/stories', story.index]">
+        <div class="card h-100">
+          <img [src]="story.images[0]" class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">{{ story.title }}</h5>
+          </div>
+        </div>
+      </a>
+    </div>
+  }
+</div>

@@ -1,0 +1,105 @@
+@if (story) {
+  <div class="border border-3 border-primary-subtle rounded-3">
+    <app-words-container #wordsContainer [words]="words" />
+  </div>
+
+  <div class="row mt-1 mt-sm-4">
+    <div class="col-7">
+      <div
+        class="input-group input-group-lg border border-3 border-primary-subtle rounded-3">
+        <input
+          #input
+          type="text"
+          class="form-control"
+          (keyup)="typing($event)"
+          [disabled]="ended" />
+      </div>
+    </div>
+    <div class="col-1 d-flex">
+      <button class="btn btn-light btn-lg" (click)="reset()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+      </button>
+    </div>
+    <div class="col-4 d-flex align-items-center justify-content-end">
+      @if (ended) {
+        <span class="fs-4">{{ 0 | date: 'mm:ss' : 'UTC' }}</span>
+      } @else {
+        <span class="fs-4">
+          {{
+            1000 * (timer | async)! || time * 1000 * 60 | date: 'mm:ss' : 'UTC'
+          }}</span
+        >
+      }
+    </div>
+  </div>
+  <div class="form-text mb-3">
+    <small>Press space after each word</small>
+  </div>
+}
+
+@if (summary) {
+  <br />
+  <h3>Summary of your performance</h3>
+  <table class="table table-striped user-select-none">
+    <thead>
+      <tr>
+        <th scope="col">Attribute</th>
+        <th scope="col" class="text-center">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Total words faced</th>
+        <td class="text-center">{{ summary.rendered.length }}</td>
+      </tr>
+      <tr>
+        <th>Correct words</th>
+        <td class="text-center">{{ correctWords(summary) }}</td>
+      </tr>
+      <tr>
+        <th>Total time</th>
+        <td class="text-center">
+          {{ totalTime(summary) | date: 'mm:ss.SSS' : 'UTC' }}
+        </td>
+      </tr>
+      <tr>
+        <th>Words per minute</th>
+        <td class="text-center">
+          {{
+            (1000 * 60 * correctWords(summary)) / totalTime(summary)
+              | number: '.3-3'
+          }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div>
+    <small>Note that the total time is computed until last word typed</small>
+  </div>
+  <br />
+  <h4>Word by word analysis</h4>
+  <table class="table table-striped user-select-none">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col" class="text-center">Word</th>
+        <th scope="col" class="text-center">Typed</th>
+        <th scope="col" class="text-center">Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (_ of summary.time; track $index) {
+        <tr>
+          <th scope="row">{{ $index + 1 }}</th>
+          <td class="text-center">
+            {{ summary.rendered[$index] }}
+          </td>
+          <td class="text-center">{{ summary.typed[$index] }}</td>
+          <td class="text-center">
+            {{ summary.time[$index] | date: 'mm:ss.SSS' : 'UTC' }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

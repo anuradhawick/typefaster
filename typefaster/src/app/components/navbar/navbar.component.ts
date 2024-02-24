@@ -24,6 +24,7 @@ export class NavbarComponent {
   isMenuCollapsed = true;
   links = [
     { title: 'Home', fragment: 'home' },
+    { title: 'Stories', fragment: 'stories' },
     { title: 'About', fragment: 'about' },
   ];
   themeService: ThemeService;

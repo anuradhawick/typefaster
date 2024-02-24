@@ -1,76 +1,75 @@
-<div class="container-fluid">
-    <form [formGroup]="form">
-    <div class="mx-auto">
-      <img src="/assets/logo.webp" class="img-fluid mx-auto d-block" style="max-width: 400px;"/>
-    </div>
-    <hr />
-    <div class="text-center">
-      <h4>Welcome to TypeFast typing practice!</h4>
-    </div>
-    <hr />
-    <select class="form-select form-select-lg" formControlName="story">
-      <option selected value="">Choose your story</option>
-      <option value="1">One</option>
-      <option value="2">Two</option>
-      <option value="3">Three</option>
-    </select>
-    <hr />
-    <div class="container-fluid p-0">
-      <div class="row">
-        <div class="col-md-4 col-12">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              role="switch"
-              formControlName="case" />
-            <label class="form-check-label">Case sensitive</label>
-          </div>
-        </div>
-        <div class="col-md-4 col-12">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              role="switch"
-              formControlName="special" />
-            <label class="form-check-label">Allow special chars</label>
-          </div>
-        </div>
-        <div class="col-md-4 col-12">
-          <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              role="switch"
-              formControlName="other" />
-            <label class="form-check-label">Allow special chars</label>
-          </div>
-        </div>
-      </div>
-      <hr />
-      <label class="form-label" for="time-range"
-        >Chose your time - {{ form.value.time }} min</label
-      >
-      <input
-        type="range"
-        formControlName="time"
-        class="form-range"
-        min="1"
-        max="5"
-        step="1"
-        id="time-range" />
-      <hr />
-      <div class="d-grid">
-        <button
-          type="button"
-          class="btn btn-primary btn-lg"
-          [disabled]="form.invalid"
-          (click)="start.emit(form.value)">
-          Start
-        </button>
-      </div>
-    </div>
-  </form>
+<form [formGroup]="form">
+  <div class="mx-auto">
+    <img
+      src="/assets/logo.webp"
+      class="img-fluid mx-auto d-block"
+      style="max-width: 100%" />
   </div>
-<br />
+  <hr />
+  <div class="text-center">
+    <h4>Welcome to TypeFast typing practice!</h4>
+  </div>
+  <hr />
+  <select class="form-select form-select-lg" formControlName="story">
+    @for (story of stories; track $index) {
+      <option [value]="story.index">{{ story.title }}</option>
+    }
+  </select>
+  <hr />
+  <div class="container-fluid p-0">
+    <div class="row">
+      <div class="col-md-4 col-12">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            formControlName="case" />
+          <label class="form-check-label">Case sensitive</label>
+        </div>
+      </div>
+      <div class="col-md-4 col-12">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            formControlName="special" />
+          <label class="form-check-label">Allow special chars</label>
+        </div>
+      </div>
+      <div class="col-md-4 col-12">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            formControlName="randomise" />
+          <label class="form-check-label">Randomise word order</label>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <label class="form-label" for="time-range"
+      >Chose your time - {{ form.value.time }} min</label
+    >
+    <input
+      type="range"
+      formControlName="time"
+      class="form-range"
+      min="1"
+      max="5"
+      step="1"
+      id="time-range" />
+    <hr />
+    <div class="d-grid">
+      <button
+        type="button"
+        class="btn btn-primary btn-lg"
+        [disabled]="form.invalid"
+        (click)="start.emit(form.value)">
+        Start
+      </button>
+    </div>
+  </div>
+</form>

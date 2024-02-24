@@ -1,0 +1,28 @@
+@if (story) {
+  <div class="col-12">
+    <a class="btn btn-light" routerLink="/stories"
+      ><i class="bi bi-backspace-fill"></i
+    ></a>
+    <div class="text-center">
+      <h3>{{ story.title }}</h3>
+    </div>
+    <ngb-carousel [interval]="5000">
+      @for (image of story.images; track image) {
+        <ng-template ngbSlide>
+          <div style="height: 400px">
+            <img [src]="image" class="d-block mx-auto h-100" />
+          </div>
+        </ng-template>
+      }
+    </ngb-carousel>
+    <br />
+    <strong>Prompt</strong>
+    <p>
+      {{ story.prompt }}
+    </p>
+    <strong>Story</strong>
+    <p>
+      {{ story.story }}
+    </p>
+  </div>
+}

@@ -1,0 +1,11 @@
+<div class="card overflow-hidden" style="height: 200px">
+  <div class="card-body">
+    @for (word of renderedWords; track $index) {
+      <app-word-span
+        [color]="evaluateWord($index)"
+        (lineChanged)="shift($index)"
+        [word]="word"
+        [active]="$index === index" />
+    }
+  </div>
+</div>
