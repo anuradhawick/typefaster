@@ -1,4 +1,10 @@
-# Setup Guide
+# _TypeFaster_
+
+<img src="./typefaster/src/assets/logo.webp" width="400px" style="display: block; margin: 0 auto;">
+
+Visit: [https://typefaster.anuradhawick.com](https://typefaster.anuradhawick.com)
+
+## Setup Guide
 
 Create stories in stories directory, include images in `webp` format (thats cheaper). Add a json explaining the story using below schema.
 
@@ -24,9 +30,9 @@ Add a `story.txt` plain text file that contains the actual story.
 
 Now run `process_stories.py` script to generate the story related content inside the angular app.
 
-# Deployment Guide
+## Deployment Guide
 
-Terraform state bucket is managed outside of the program. This it must be imported.
+Terraform state bucket is managed outside of the program. So it must be imported.
 
 ```bash
 terraform import aws_s3_bucket.apps_bucket apps-anuradhawick
