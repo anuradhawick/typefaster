@@ -74,8 +74,9 @@ export class TypistPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
       this.time = parseInt(params.get('time') as string);
-      this.ws.load(params)?.subscribe(([story, words]) => {
-        (this.story = story), (this.words = words);
+      this.ws.load(params).subscribe(([story, words]) => {
+        this.story = story;
+        this.words = words;
       });
     });
 

@@ -69,10 +69,17 @@ export class WordsContainerComponent implements OnChanges {
     }
   }
 
+  compare(typed: string, rendered: string, partial = false) {
+    if (partial) {
+      return rendered.startsWith(typed);
+    }
+    return typed === rendered;
+  }
+
   evaluateWord(index: number): string {
     // check typed words
     if (index < this.index) {
-      if (this.typedWords[index] === this.renderedWords[index]) {
+      if (this.compare(this.typedWords[index], this.renderedWords[index])) {
         return 'correct';
       } else {
         return 'wrong';
@@ -84,7 +91,7 @@ export class WordsContainerComponent implements OnChanges {
     }
     // if there is a word to take a peek at and it is correct
     if (this.peek.length > 0) {
-      if (!this.renderedWords[this.index].startsWith(this.peek)) {
+      if (!this.compare(this.peek, this.renderedWords[this.index], true)) {
         return 'wrong';
       } else {
         return '';

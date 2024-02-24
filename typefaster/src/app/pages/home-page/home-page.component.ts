@@ -12,7 +12,7 @@ import { TypistConfig } from '../../interfaces/config';
 })
 export class HomePageComponent {
   constructor(private router: Router) {}
-  start(config: TypistConfig) {
+  configCompleted(config: TypistConfig) {
     this.router.navigate(['/typist'], { queryParams: config });
   }
 }
