@@ -25,3 +25,15 @@ Add a `story.txt` plain text file that contains the actual story.
 Now run `process_stories.py` script to generate the story related content inside the angular app.
 
 # Deployment Guide
+
+Terraform state bucket is managed outside of the program. This it must be imported.
+
+```bash
+terraform import aws_s3_bucket.apps_bucket apps-anuradhawick
+```
+
+Once you have done that you can apply
+
+```bash
+terraform apply
+```
