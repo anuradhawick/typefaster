@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.ts.theme.subscribe(theme => {
+    this.ts.systemTheme.subscribe(theme => {
       this.theme = theme;
       // because we use SSR for development
       this.cd.detectChanges();

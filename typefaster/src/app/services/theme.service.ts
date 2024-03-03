@@ -5,32 +5,52 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class ThemeService {
-  theme = new BehaviorSubject('light');
+  userTheme = 'system';
+  systemTheme = new BehaviorSubject('system');
+
   constructor() {
     afterNextRender(
       () => {
-        this.theme.subscribe(theme =>
-          (document.body as HTMLElement).setAttribute('data-bs-theme', theme)
-        );
+        // restore user choice
+        this.userTheme = localStorage.getItem('theme') || 'system';
+        if (this.userTheme !== 'system') {
+          (document.body as HTMLElement).setAttribute(
+            'data-bs-theme',
+            this.userTheme
+          );
+        }
+        // if user choice is sytem use it
+        this.systemTheme.subscribe(theme => {
+          if (this.userTheme === 'system') {
+            (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
+          }
+        });
         this.watchSystemTheme();
       },
       { phase: AfterRenderPhase.MixedReadWrite }
     );
   }
 
-  toggle(dark: boolean) {
-    const theme = dark ? 'dark' : 'light';
-    this.theme.next(theme);
+  activate(theme: string) {
+    localStorage.setItem('theme', theme);
+    this.userTheme = theme;
+    if (this.userTheme !== 'system') {
+      (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
+    } else {
+      const matchDarkMedia = window.matchMedia('(prefers-color-scheme: dark)');
+      const theme = matchDarkMedia.matches ? 'dark' : 'light';
+      (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
+    }
   }
 
   watchSystemTheme(): void {
     const matchDarkMedia = window.matchMedia('(prefers-color-scheme: dark)');
     const theme = matchDarkMedia.matches ? 'dark' : 'light';
-    this.theme.next(theme);
+    this.systemTheme.next(theme);
 
     matchDarkMedia.addEventListener('change', e => {
       const theme = e.matches ? 'dark' : 'light';
-      this.theme.next(theme);
+      this.systemTheme.next(theme);
     });
   }
 }

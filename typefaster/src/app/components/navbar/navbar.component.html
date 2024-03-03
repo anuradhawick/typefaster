@@ -29,18 +29,35 @@
           </li>
         }
       </ul>
-      <div class="form-check form-switch">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          role="switch"
-          [checked]="theme === 'dark'"
-          (change)="ts.toggle($any($event).target.checked)" />
-        @if (theme === 'light') {
-          <i class="bi bi-brightness-high-fill"></i>
-        } @else {
-          <i class="bi bi-moon-stars-fill icon-white"></i>
-        }
+      <div
+        ngbDropdown
+        placement="bottom-end"
+        display="dynamic"
+        class="d-inline-block">
+        <button type="button" id="dark-mode" ngbDropdownToggle class="btn">
+          @switch (ts.userTheme) {
+            @case ('light') {
+              <i class="bi bi-brightness-high-fill"></i>
+            }
+            @case ('dark') {
+              <i class="bi bi-moon-stars-fill icon-white"></i>
+            }
+            @default {
+              <i class="bi bi-laptop-fill"></i>
+            }
+          }
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dark-mode">
+          <button (click)="ts.activate('system')" ngbDropdownItem>
+            <i class="bi bi-laptop-fill"> System</i>
+          </button>
+          <button (click)="ts.activate('light')" ngbDropdownItem>
+            <i class="bi bi-brightness-high-fill"> Light</i>
+          </button>
+          <button (click)="ts.activate('dark')" ngbDropdownItem>
+            <i class="bi bi-moon-stars-fill icon-white"> Dark</i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
