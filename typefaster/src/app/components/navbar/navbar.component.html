@@ -29,12 +29,8 @@
           </li>
         }
       </ul>
-      <div
-        ngbDropdown
-        placement="bottom-end"
-        display="dynamic"
-        class="d-inline-block">
-        <button type="button" id="dark-mode" ngbDropdownToggle class="btn">
+      <div ngbDropdown display="dynamic" class="navbar-nav d-inline-block">
+        <span role="button" id="dark-mode" ngbDropdownToggle class="fs-5">
           @switch (ts.userTheme) {
             @case ('light') {
               <i class="bi bi-brightness-high-fill"></i>
@@ -46,15 +42,16 @@
               <i class="bi bi-laptop-fill"></i>
             }
           }
-        </button>
+          Theme
+        </span>
         <div ngbDropdownMenu aria-labelledby="dark-mode">
-          <button (click)="ts.activate('system')" ngbDropdownItem>
+          <button class="fs-5" (click)="ts.activate('system')" ngbDropdownItem>
             <i class="bi bi-laptop-fill"> System</i>
           </button>
-          <button (click)="ts.activate('light')" ngbDropdownItem>
+          <button class="fs-5" (click)="ts.activate('light')" ngbDropdownItem>
             <i class="bi bi-brightness-high-fill"> Light</i>
           </button>
-          <button (click)="ts.activate('dark')" ngbDropdownItem>
+          <button class="fs-5" (click)="ts.activate('dark')" ngbDropdownItem>
             <i class="bi bi-moon-stars-fill icon-white"> Dark</i>
           </button>
         </div>
