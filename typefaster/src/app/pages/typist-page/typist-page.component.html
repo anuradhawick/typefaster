@@ -9,8 +9,8 @@
         class="input-group input-group-lg border border-3 border-primary-subtle rounded-3">
         <input
           #input
-          type="text"
-          class="form-control"
+          [type]="kind"
+          class="form-control force-text"
           (keyup)="typing($event)"
           [disabled]="ended" />
       </div>
