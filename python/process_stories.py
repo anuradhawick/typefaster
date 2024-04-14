@@ -1,11 +1,30 @@
-from glob import glob
-import pathlib
 import json
+import os
+import pathlib
 import re
 import shutil
+from glob import glob
+
+from PIL import Image
 
 WHITE_SPACES = r"(\s+)"
 WHITE_SPACE = r" "
+
+
+def resize_and_optimize_webp(file_path, output_path):
+    """
+    Resizes all WEBP images found in the input_folder to 600x600 pixels
+    and saves the optimized images to the output_folder.
+    """
+    # Open the image
+    with Image.open(file_path) as img:
+        # Resize the image
+        img = img.resize((600, 600), Image.ANTIALIAS)
+        # Save the image to output directory with optimization
+        img.save(
+            output_path, format="WEBP", optimize=True, quality=80
+        )  # quality can be adjusted as needed
+
 
 story_summaries = []
 
@@ -27,12 +46,9 @@ for dir in glob("../stories/*"):
             .joinpath("../typefaster/src/assets/stories", source.name)
             .as_posix()
         )
-        shutil.copyfile(
-            source.as_posix(),
-            pathlib.Path("")
+        resize_and_optimize_webp(source.as_posix(), pathlib.Path("")
             .joinpath("../typefaster/src/assets/stories", source.name)
-            .as_posix(),
-        )
+            .as_posix())
 
     full_json = {
         **json_data,
