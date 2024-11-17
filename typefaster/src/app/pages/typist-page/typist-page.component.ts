@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   ReplaySubject,
@@ -53,7 +47,6 @@ const createCountdown = (seconds: number): ReplaySubject<number> => {
 })
 export class TypistPageComponent implements OnInit, OnDestroy {
   @ViewChild('wordsContainer') wordsContainer: WordsContainerComponent;
-  @ViewChild('input') inputEditor: ElementRef;
   protected story: StoryEntry | null = null;
   protected time: number = 0;
   protected words: string[] = [];
@@ -95,8 +88,8 @@ export class TypistPageComponent implements OnInit, OnDestroy {
     this.started = false;
     this.ended = false;
     this.timer = new ReplaySubject();
-    (this.inputEditor.nativeElement as HTMLInputElement).value = '';
     this.summary = null;
+    this.word = '';
   }
 
   ngOnDestroy(): void {
@@ -111,7 +104,10 @@ export class TypistPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  protected word: string = '';
+
   typing(event: KeyboardEvent) {
+    event.preventDefault();
     if (!this.started) {
       this.started = true;
       this.timer = createCountdown(this.time * 60);
@@ -119,16 +115,24 @@ export class TypistPageComponent implements OnInit, OnDestroy {
         complete: () => {
           this.ended = true;
           this.summary = this.wordsContainer.finish();
-          console.log(this.summary);
         },
       });
     }
-    const str = (event.target as HTMLInputElement).value.trim();
-    this.wordsContainer.peekWord(str);
+
     if (event.code === 'Space' || event.key === 'Enter') {
-      this.input.next(str);
-      (event.target as HTMLInputElement).value = '';
+      console.log('word:', this.word);
+      this.input.next(this.word);
+      this.word = '';
+    } else if (event.key === 'Backspace') {
+      this.word = this.word.slice(0, -1);
+    } else if (/^[a-zA-Z0-9]$/.test(event.key)) {
+      this.word += event.key;
+      this.wordsContainer.peekWord(this.word);
     }
+  }
+
+  keydown(event: KeyboardEvent) {
+    event.preventDefault();
   }
 
   totalTime(summary: History) {

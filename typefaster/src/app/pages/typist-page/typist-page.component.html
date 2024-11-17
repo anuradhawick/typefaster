@@ -9,9 +9,11 @@
         class="input-group input-group-lg border border-3 border-primary-subtle rounded-3">
         <input
           #input
+          [value]="word"
           [type]="kind"
           class="form-control force-text"
           (keyup)="typing($event)"
+          (keydown)="keydown($event)"
           [disabled]="ended" />
       </div>
     </div>
