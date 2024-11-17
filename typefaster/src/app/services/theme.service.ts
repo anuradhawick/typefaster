@@ -9,23 +9,25 @@ export class ThemeService {
   systemTheme = new BehaviorSubject('system');
 
   constructor() {
-    afterNextRender(
-      { mixedReadWrite: () => {
+    afterNextRender({
+      mixedReadWrite: () => {
         // restore user choice
         this.userTheme = localStorage.getItem('theme') || 'system';
         if (this.userTheme !== 'system') {
-            (document.body as HTMLElement).setAttribute('data-bs-theme', this.userTheme);
+          (document.body as HTMLElement).setAttribute(
+            'data-bs-theme',
+            this.userTheme
+          );
         }
         // if user choice is sytem use it
         this.systemTheme.subscribe(theme => {
-            if (this.userTheme === 'system') {
-                (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
-            }
+          if (this.userTheme === 'system') {
+            (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
+          }
         });
         this.watchSystemTheme();
-    } },
-      
-    );
+      },
+    });
   }
 
   activate(theme: string) {
