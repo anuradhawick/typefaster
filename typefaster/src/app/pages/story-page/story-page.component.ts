@@ -1,6 +1,6 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { StoryEntry } from '../../interfaces/story';
@@ -8,7 +8,7 @@ import { StoryEntry } from '../../interfaces/story';
 @Component({
   selector: 'app-story-page',
   standalone: true,
-  imports: [HttpClientModule, NgbCarouselModule, RouterLink],
+  imports: [NgbCarouselModule],
   templateUrl: './story-page.component.html',
   styleUrl: './story-page.component.scss',
 })

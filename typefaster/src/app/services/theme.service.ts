@@ -1,4 +1,4 @@
-import { AfterRenderPhase, Injectable, afterNextRender } from '@angular/core';
+import { Injectable, afterNextRender } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -10,24 +10,21 @@ export class ThemeService {
 
   constructor() {
     afterNextRender(
-      () => {
+      { mixedReadWrite: () => {
         // restore user choice
         this.userTheme = localStorage.getItem('theme') || 'system';
         if (this.userTheme !== 'system') {
-          (document.body as HTMLElement).setAttribute(
-            'data-bs-theme',
-            this.userTheme
-          );
+            (document.body as HTMLElement).setAttribute('data-bs-theme', this.userTheme);
         }
         // if user choice is sytem use it
         this.systemTheme.subscribe(theme => {
-          if (this.userTheme === 'system') {
-            (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
-          }
+            if (this.userTheme === 'system') {
+                (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
+            }
         });
         this.watchSystemTheme();
-      },
-      { phase: AfterRenderPhase.MixedReadWrite }
+    } },
+      
     );
   }
 

@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { StorySummaryEntry } from '../../interfaces/story';
 
 @Component({
   selector: 'app-stories-page',
   standalone: true,
-  imports: [SpinnerComponent, HttpClientModule, RouterLink],
+  imports: [RouterLink],
   templateUrl: './stories-page.component.html',
   styleUrl: './stories-page.component.scss',
 })
