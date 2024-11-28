@@ -87,6 +87,7 @@
         <th scope="col" class="text-center">Word</th>
         <th scope="col" class="text-center">Typed</th>
         <th scope="col" class="text-center">Time</th>
+        <th scope="col" class="text-center">Correct</th>
       </tr>
     </thead>
     <tbody>
@@ -99,6 +100,17 @@
           <td class="text-center">{{ summary.typed[$index] }}</td>
           <td class="text-center">
             {{ summary.time[$index] | date: 'mm:ss.SSS' : 'UTC' }}
+          </td>
+          <td
+            class="text-center"
+            [class]="{
+              'text-success':
+                summary.typed[$index] === summary.rendered[$index],
+              'text-danger': summary.typed[$index] !== summary.rendered[$index]
+            }">
+            {{
+              summary.typed[$index] === summary.rendered[$index] ? 'Yes' : 'No'
+            }}
           </td>
         </tr>
       }

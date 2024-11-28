@@ -125,7 +125,7 @@ export class TypistPageComponent implements OnInit, OnDestroy {
       this.word = '';
     } else if (event.key === 'Backspace') {
       this.word = this.word.slice(0, -1);
-    } else if (/^[a-zA-Z0-9]$/.test(event.key)) {
+    } else if (event.key.length === 1) {
       this.word += event.key;
       this.wordsContainer.peekWord(this.word);
     }
