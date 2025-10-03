@@ -69,36 +69,3 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   aliases = ["${var.webapp-name}.anuradhawick.com"]
 }
 
-# allow cloudfront to access s3
-resource "aws_s3_bucket_policy" "s3_access_from_cloudfront" {
-  bucket = aws_s3_bucket.apps_bucket.id
-  policy = data.aws_iam_policy_document.s3_access_from_cloudfront.json
-}
-
-# iam policy
-data "aws_iam_policy_document" "s3_access_from_cloudfront" {
-  statement {
-    principals {
-      type = "Service"
-      identifiers = [
-        "cloudfront.amazonaws.com"
-      ]
-    }
-
-    actions = [
-      "s3:GetObject"
-    ]
-
-    resources = [
-      "${aws_s3_bucket.apps_bucket.arn}/*"
-    ]
-
-    condition {
-      test     = "StringEquals"
-      variable = "AWS:SourceArn"
-      values = [
-        aws_cloudfront_distribution.s3_distribution.arn
-      ]
-    }
-  }
-}
