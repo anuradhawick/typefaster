@@ -12,7 +12,6 @@ import { TypistConfig } from '../../../interfaces/config';
 
 @Component({
   selector: 'app-setup',
-  standalone: true,
   imports: [ReactiveFormsModule, FormsModule],
   templateUrl: './setup.component.html',
   styleUrl: './setup.component.scss',

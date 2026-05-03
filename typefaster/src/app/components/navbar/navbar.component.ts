@@ -9,7 +9,6 @@ import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
   imports: [
     RouterModule,
     RouterLink,

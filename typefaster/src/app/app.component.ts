@@ -5,14 +5,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    RouterLink,
-    NgbNavModule,
-    NgbDropdownModule,
-    NavbarComponent,
-  ],
+  imports: [RouterOutlet, NgbNavModule, NgbDropdownModule, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

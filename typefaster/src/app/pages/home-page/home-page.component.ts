@@ -5,7 +5,6 @@ import { TypistConfig } from '../../interfaces/config';
 
 @Component({
   selector: 'app-home-page',
-  standalone: true,
   imports: [SetupComponent, RouterModule],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
