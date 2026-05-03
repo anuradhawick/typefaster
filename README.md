@@ -41,6 +41,7 @@ Use `pnpm` to install angular dependencies.
 Run the following commands before deploying to ensure clean code.
 
 ```bash
+cd typefaster
 pnpm run pretty
 ng lint --fix
 ```

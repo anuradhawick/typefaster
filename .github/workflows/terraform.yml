@@ -57,6 +57,10 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: ./typefaster
 
+      - name: Lint Angular App
+        run: pnpm exec ng lint
+        working-directory: ./typefaster
+
       - name: Build Angular App
         run: pnpm exec ng build --configuration production --subresource-integrity
         working-directory: ./typefaster

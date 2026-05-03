@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   ReplaySubject,
@@ -46,6 +46,9 @@ const createCountdown = (seconds: number): ReplaySubject<number> => {
   styleUrl: './typist-page.component.scss',
 })
 export class TypistPageComponent implements OnInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private ws = inject(WordsLoaderService);
+
   @ViewChild('wordsContainer') wordsContainer: WordsContainerComponent;
   protected story: StoryEntry | null = null;
   protected time: number = 0;
@@ -59,11 +62,6 @@ export class TypistPageComponent implements OnInit, OnDestroy {
   private queryParamsSubscription: Subscription;
   private timerSubscription: Subscription;
   private inputSubscription: Subscription;
-
-  constructor(
-    private route: ActivatedRoute,
-    private ws: WordsLoaderService
-  ) {}
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {

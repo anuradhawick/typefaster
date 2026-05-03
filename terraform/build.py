@@ -3,6 +3,7 @@ import hashlib
 import sys
 import subprocess
 import json
+import shlex
 
 
 # docs - https://stackoverflow.com/questions/36204248/creating-unique-hash-for-directory-in-python
@@ -19,8 +20,8 @@ def sha1_of_file(filepath: str):
 def hash_dir(dir_path: str):
     sha = hashlib.sha1()
 
-    for path, _, files in os.walk(dir_path):
-        # we sort to guarantee that files will always go in the same order
+    for path, dirs, files in os.walk(dir_path):
+        dirs.sort()
         for file in sorted(files):
             file_hash = sha1_of_file(os.path.join(path, file))
             sha.update(file_hash.encode())
@@ -30,7 +31,7 @@ def hash_dir(dir_path: str):
 
 def npm_install(cmd: str, dir: str):
     out = subprocess.Popen(
-        cmd.split(),
+        shlex.split(cmd),
         cwd=dir,
         encoding="ascii",
         stdout=sys.stderr,
@@ -41,7 +42,7 @@ def npm_install(cmd: str, dir: str):
 
 def build(cmd: str, dir: str):
     out = subprocess.Popen(
-        cmd.split(),
+        shlex.split(cmd),
         cwd=dir,
         stdout=sys.stderr,
     )
@@ -54,8 +55,8 @@ if __name__ == "__main__":
     build_cmd = args["build_command"]
     install_cmd = args["install_command"]
     webapp_dir = args["webapp_dir"]
-    build_destiation = args["build_destiation"]
+    build_destination = args["build_destination"]
 
     npm_install(install_cmd, webapp_dir)
     build(build_cmd, webapp_dir)
-    print(f""" {{ "hash": "{hash_dir(build_destiation)}" }} """)
+    print(f""" {{ "hash": "{hash_dir(build_destination)}" }} """)

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,22 +17,18 @@ import { TypistConfig } from '../../../interfaces/config';
   styleUrl: './setup.component.scss',
 })
 export class SetupComponent implements OnInit {
-  @Output() configCompleted = new EventEmitter<TypistConfig>();
-  protected form: FormGroup;
-  protected stories: StorySummaryEntry[] = [];
+  private fb = inject(FormBuilder);
+  private http = inject(HttpClient);
 
-  constructor(
-    private fb: FormBuilder,
-    private http: HttpClient
-  ) {
-    this.form = this.fb.group({
-      story: this.fb.control('1', [Validators.required]),
-      case: this.fb.control(true, [Validators.required]),
-      special: this.fb.control(false, [Validators.required]),
-      randomise: this.fb.control(false, [Validators.required]),
-      time: this.fb.control(1, [Validators.min(1), Validators.max(5)]),
-    });
-  }
+  @Output() configCompleted = new EventEmitter<TypistConfig>();
+  protected form: FormGroup = this.fb.group({
+    story: this.fb.control('1', [Validators.required]),
+    case: this.fb.control(true, [Validators.required]),
+    special: this.fb.control(false, [Validators.required]),
+    randomise: this.fb.control(false, [Validators.required]),
+    time: this.fb.control(1, [Validators.min(1), Validators.max(5)]),
+  });
+  protected stories: StorySummaryEntry[] = [];
 
   ngOnInit(): void {
     this.form.controls['story'].valueChanges.subscribe(

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { StorySummaryEntry } from '../../interfaces/story';
@@ -11,9 +11,8 @@ import { StorySummaryEntry } from '../../interfaces/story';
   styleUrl: './stories-page.component.scss',
 })
 export class StoriesPageComponent implements OnInit {
+  private http = inject(HttpClient);
   protected stories: StorySummaryEntry[] = [];
-
-  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.http

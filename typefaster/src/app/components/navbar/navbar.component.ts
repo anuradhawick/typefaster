@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import {
   NgbCollapseModule,
@@ -20,6 +20,8 @@ import { ThemeService } from '../../services/theme.service';
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit {
+  protected ts = inject(ThemeService);
+  private cd = inject(ChangeDetectorRef);
   protected isMenuCollapsed = true;
   protected links = [
     { title: 'Home', fragment: 'home', icon: 'house-door' },
@@ -27,11 +29,6 @@ export class NavbarComponent implements OnInit {
     { title: 'About', fragment: 'about', icon: 'file-person' },
   ];
   protected theme: string;
-
-  constructor(
-    protected ts: ThemeService,
-    private cd: ChangeDetectorRef
-  ) {}
 
   ngOnInit(): void {
     this.ts.systemTheme.subscribe(theme => {

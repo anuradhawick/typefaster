@@ -4,6 +4,7 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import { WordSpanComponent } from '../word-span/word-span.component';
 import { History } from '../../../interfaces/typist';
@@ -16,6 +17,8 @@ import { History } from '../../../interfaces/typist';
   styleUrl: './words-container.component.scss',
 })
 export class WordsContainerComponent implements OnChanges {
+  private cd = inject(ChangeDetectorRef);
+
   @Input({ required: true }) words: string[];
   protected renderedWords: string[] = [];
   protected typedWords: string[] = [];
@@ -29,8 +32,6 @@ export class WordsContainerComponent implements OnChanges {
     rendered: [],
     time: [],
   };
-
-  constructor(private cd: ChangeDetectorRef) {}
 
   reset() {
     this.renderedWords = this.words.slice(0, this.windowSize);

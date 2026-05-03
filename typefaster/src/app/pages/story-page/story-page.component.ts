@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
@@ -13,13 +13,10 @@ import { StoryEntry } from '../../interfaces/story';
   styleUrl: './story-page.component.scss',
 })
 export class StoryPageComponent implements OnInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private http = inject(HttpClient);
   protected story: StoryEntry;
   private queryParamsSubscription: Subscription;
-
-  constructor(
-    private route: ActivatedRoute,
-    private http: HttpClient
-  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

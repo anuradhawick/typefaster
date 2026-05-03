@@ -1,1 +1,2 @@
-.terraform*
+.terraform/
+__pycache__/

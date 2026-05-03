@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ParamMap } from '@angular/router';
 import { StoryEntry } from '../../../interfaces/story';
 import { Observable, map, of } from 'rxjs';
 
 @Injectable()
 export class WordsLoaderService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   load(params: ParamMap): Observable<[StoryEntry, string[]]> {
     const story = params.get('story') as string;

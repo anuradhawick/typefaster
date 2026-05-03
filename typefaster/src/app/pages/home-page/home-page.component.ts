@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SetupComponent } from './setup/setup.component';
 import { Router, RouterModule } from '@angular/router';
 import { TypistConfig } from '../../interfaces/config';
@@ -10,7 +10,8 @@ import { TypistConfig } from '../../interfaces/config';
   styleUrl: './home-page.component.scss',
 })
 export class HomePageComponent {
-  constructor(private router: Router) {}
+  private router = inject(Router);
+
   configCompleted(config: TypistConfig) {
     this.router.navigate(['/typist'], { queryParams: config });
   }

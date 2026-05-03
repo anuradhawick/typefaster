@@ -18,7 +18,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     origin_path              = "/${var.webapp-name}"
   }
 
-  tags = var.common-tags
+  tags                = var.common-tags
   comment             = "${var.webapp-name} distribution"
   enabled             = true
   is_ipv6_enabled     = true
@@ -63,7 +63,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.cert.arn
-    ssl_support_method = "sni-only"
+    ssl_support_method  = "sni-only"
   }
 
   aliases = ["${var.webapp-name}.anuradhawick.com"]
