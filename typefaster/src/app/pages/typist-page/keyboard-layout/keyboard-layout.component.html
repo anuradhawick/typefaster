@@ -1,0 +1,58 @@
+<div class="keyboard-layout">
+  <!-- Keyboard -->
+  <div class="keyboard">
+    @for (row of rows; track $index) {
+      <div class="keyboard-row">
+        @for (keyDef of row; track keyDef.key) {
+          <div
+            class="key"
+            [ngClass]="getKeyClasses(keyDef)"
+            [style.width]="keyWidth(keyDef.size)">
+            {{ keyDef.label }}
+          </div>
+        }
+      </div>
+    }
+    <!-- Space bar row -->
+    <div class="keyboard-row space-row">
+      <div
+        class="key key-space finger-4"
+        [class.key-target]="isSpaceTarget()">
+        Space
+      </div>
+    </div>
+  </div>
+
+  <!-- Hands resting on home-row positions -->
+  <div class="hands">
+    <div class="hand">
+      <div class="hand-label">Left Hand</div>
+      <div class="fingers">
+        @for (slot of leftSlots; track slot.finger) {
+          <div
+            class="finger-slot"
+            [ngClass]="'finger-' + slot.finger"
+            [class.finger-active]="isFingerActive('left', slot.finger)">
+            <span class="finger-name">{{ slot.label }}</span>
+            <span class="finger-key">{{ slot.homeKey }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="hand">
+      <div class="hand-label">Right Hand</div>
+      <div class="fingers">
+        @for (slot of rightSlots; track slot.finger) {
+          <div
+            class="finger-slot"
+            [ngClass]="'finger-' + slot.finger"
+            [class.finger-active]="isFingerActive('right', slot.finger)">
+            <span class="finger-name">{{ slot.label }}</span>
+            <span class="finger-key">{{ slot.homeKey }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

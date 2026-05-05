@@ -1,0 +1,176 @@
+@use 'sass:color';
+
+// Finger colour palette — one colour per finger index (0=pinky … 4=thumb)
+$finger-colors: (
+  0: #e74c3c,
+  1: #e67e22,
+  2: #27ae60,
+  3: #2980b9,
+  4: #8e44ad,
+);
+
+.keyboard-layout {
+  user-select: none;
+  overflow-x: auto;
+}
+
+.keyboard {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: max-content;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 4px;
+
+  &.space-row {
+    justify-content: center;
+  }
+}
+
+.key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: default;
+  flex-shrink: 0;
+  background-color: #f8f9fa;
+  color: #212529;
+  transition: background-color 0.12s ease, transform 0.1s ease, box-shadow 0.1s ease;
+  position: relative;
+
+  // Colour-code keys by finger
+  @each $idx, $c in $finger-colors {
+    &.finger-#{$idx} {
+      background-color: rgba($c, 0.12);
+      border-color: rgba($c, 0.45);
+      color: color.mix($c, #000, 65%);
+    }
+  }
+
+  // Target-key highlight overrides the finger tint
+  &.key-target {
+    @each $idx, $c in $finger-colors {
+      &.finger-#{$idx} {
+        background-color: $c;
+        color: #fff;
+        border-color: color.mix($c, #000, 75%);
+        transform: scale(1.12);
+        box-shadow: 0 0 10px rgba($c, 0.55);
+        z-index: 2;
+        font-weight: 700;
+      }
+    }
+  }
+
+  // Small home-row bump indicator
+  &.key-home::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: currentColor;
+    opacity: 0.55;
+  }
+}
+
+.key-space {
+  width: 264px;
+}
+
+// ── Hands ──────────────────────────────────────────────
+
+.hands {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 16px;
+  gap: 12px;
+  min-width: max-content;
+}
+
+.hand {
+  flex: 1;
+  max-width: 320px;
+}
+
+.hand-label {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6c757d;
+  margin-bottom: 8px;
+}
+
+.fingers {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.finger-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  padding: 8px 4px;
+  border-radius: 8px 8px 4px 4px;
+  border: 2px solid #dee2e6;
+  background-color: #f8f9fa;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+  @each $idx, $c in $finger-colors {
+    &.finger-#{$idx} {
+      background-color: rgba($c, 0.12);
+      border-color: rgba($c, 0.45);
+
+      .finger-name {
+        color: color.mix($c, #000, 65%);
+      }
+
+      .finger-key {
+        color: color.mix($c, #000, 60%);
+      }
+
+      &.finger-active {
+        background-color: $c;
+        border-color: color.mix($c, #000, 75%);
+        transform: translateY(-10px);
+        box-shadow: 0 6px 16px rgba($c, 0.45);
+
+        .finger-name,
+        .finger-key {
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.finger-name {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.finger-key {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: monospace;
+  margin-top: 2px;
+}
