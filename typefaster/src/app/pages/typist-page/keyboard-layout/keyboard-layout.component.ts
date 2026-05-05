@@ -22,57 +22,73 @@ export interface FingerSlot {
 
 /** Maps shifted symbols to their base key (e.g. '!' → '1'). */
 const SHIFT_MAP: Record<string, string> = {
-  '!': '1', '@': '2', '#': '3', '$': '4', '%': '5',
-  '^': '6', '&': '7', '*': '8', '(': '9', ')': '0',
-  '_': '-', '+': '=', '~': '`',
-  '{': '[', '}': ']', '|': '\\',
-  ':': ';', '"': "'", '<': ',', '>': '.', '?': '/',
+  '!': '1',
+  '@': '2',
+  '#': '3',
+  $: '4',
+  '%': '5',
+  '^': '6',
+  '&': '7',
+  '*': '8',
+  '(': '9',
+  ')': '0',
+  _: '-',
+  '+': '=',
+  '~': '`',
+  '{': '[',
+  '}': ']',
+  '|': '\\',
+  ':': ';',
+  '"': "'",
+  '<': ',',
+  '>': '.',
+  '?': '/',
 };
 
 /** Maps each typeable key to the hand and finger that presses it. */
 const KEY_FINGER_MAP: Record<string, FingerAssignment> = {
   '`': { hand: 'left', finger: 0 },
   '1': { hand: 'left', finger: 0 },
-  'q': { hand: 'left', finger: 0 },
-  'a': { hand: 'left', finger: 0 },
-  'z': { hand: 'left', finger: 0 },
+  q: { hand: 'left', finger: 0 },
+  a: { hand: 'left', finger: 0 },
+  z: { hand: 'left', finger: 0 },
   '2': { hand: 'left', finger: 1 },
-  'w': { hand: 'left', finger: 1 },
-  's': { hand: 'left', finger: 1 },
-  'x': { hand: 'left', finger: 1 },
+  w: { hand: 'left', finger: 1 },
+  s: { hand: 'left', finger: 1 },
+  x: { hand: 'left', finger: 1 },
   '3': { hand: 'left', finger: 2 },
-  'e': { hand: 'left', finger: 2 },
-  'd': { hand: 'left', finger: 2 },
-  'c': { hand: 'left', finger: 2 },
+  e: { hand: 'left', finger: 2 },
+  d: { hand: 'left', finger: 2 },
+  c: { hand: 'left', finger: 2 },
   '4': { hand: 'left', finger: 3 },
   '5': { hand: 'left', finger: 3 },
-  'r': { hand: 'left', finger: 3 },
-  't': { hand: 'left', finger: 3 },
-  'f': { hand: 'left', finger: 3 },
-  'g': { hand: 'left', finger: 3 },
-  'v': { hand: 'left', finger: 3 },
-  'b': { hand: 'left', finger: 3 },
+  r: { hand: 'left', finger: 3 },
+  t: { hand: 'left', finger: 3 },
+  f: { hand: 'left', finger: 3 },
+  g: { hand: 'left', finger: 3 },
+  v: { hand: 'left', finger: 3 },
+  b: { hand: 'left', finger: 3 },
   ' ': { hand: 'left', finger: 4 },
   '6': { hand: 'right', finger: 3 },
   '7': { hand: 'right', finger: 3 },
-  'y': { hand: 'right', finger: 3 },
-  'u': { hand: 'right', finger: 3 },
-  'h': { hand: 'right', finger: 3 },
-  'j': { hand: 'right', finger: 3 },
-  'n': { hand: 'right', finger: 3 },
-  'm': { hand: 'right', finger: 3 },
+  y: { hand: 'right', finger: 3 },
+  u: { hand: 'right', finger: 3 },
+  h: { hand: 'right', finger: 3 },
+  j: { hand: 'right', finger: 3 },
+  n: { hand: 'right', finger: 3 },
+  m: { hand: 'right', finger: 3 },
   '8': { hand: 'right', finger: 2 },
-  'i': { hand: 'right', finger: 2 },
-  'k': { hand: 'right', finger: 2 },
+  i: { hand: 'right', finger: 2 },
+  k: { hand: 'right', finger: 2 },
   ',': { hand: 'right', finger: 2 },
   '9': { hand: 'right', finger: 1 },
-  'o': { hand: 'right', finger: 1 },
-  'l': { hand: 'right', finger: 1 },
+  o: { hand: 'right', finger: 1 },
+  l: { hand: 'right', finger: 1 },
   '.': { hand: 'right', finger: 1 },
   '0': { hand: 'right', finger: 0 },
   '-': { hand: 'right', finger: 0 },
   '=': { hand: 'right', finger: 0 },
-  'p': { hand: 'right', finger: 0 },
+  p: { hand: 'right', finger: 0 },
   '[': { hand: 'right', finger: 0 },
   ']': { hand: 'right', finger: 0 },
   '\\': { hand: 'right', finger: 0 },
@@ -189,7 +205,7 @@ export class KeyboardLayoutComponent {
 
   private get activeAssignment(): FingerAssignment | null {
     const k = this.normalizedKey;
-    return k ? (KEY_FINGER_MAP[k] ?? null) : null;
+    return k ? KEY_FINGER_MAP[k] ?? null : null;
   }
 
   protected isKeyTarget(keyDef: KeyDef): boolean {
@@ -202,6 +218,10 @@ export class KeyboardLayoutComponent {
 
   protected keyWidth(size: number): string {
     return `${size * 44}px`;
+  }
+
+  protected keyFlex(size: number): string {
+    return `${size} 1 0%`;
   }
 
   protected getKeyClasses(keyDef: KeyDef): Record<string, boolean> {

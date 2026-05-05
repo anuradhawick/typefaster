@@ -14,6 +14,7 @@ import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { History } from '../../interfaces/typist';
 import { StoryEntry } from '../../interfaces/story';
 import { WordsLoaderService } from './services/words-loader.service';
+import { KeyboardLayoutComponent } from './keyboard-layout/keyboard-layout.component';
 
 const createCountdown = (seconds: number): ReplaySubject<number> => {
   const countdown$ = new ReplaySubject<number>(1);
@@ -36,6 +37,7 @@ const createCountdown = (seconds: number): ReplaySubject<number> => {
   standalone: true,
   imports: [
     WordsContainerComponent,
+    KeyboardLayoutComponent,
     FormsModule,
     AsyncPipe,
     DatePipe,
@@ -103,6 +105,25 @@ export class TypistPageComponent implements OnInit, OnDestroy {
   }
 
   protected word: string = '';
+
+  /**
+   * The next keyboard key the user should press.
+   * Returns a space when the current word is fully typed, or null when
+   * there is no active session / the game has ended.
+   */
+  get nextKey(): string | null {
+    if (this.ended || !this.wordsContainer) {
+      return null;
+    }
+    const activeWord = this.wordsContainer.activeWord;
+    if (activeWord == null) {
+      return null;
+    }
+    if (this.word.length >= activeWord.length) {
+      return ' ';
+    }
+    return activeWord[this.word.length];
+  }
 
   typing(event: KeyboardEvent) {
     event.preventDefault();

@@ -1,55 +1,64 @@
-<div class="keyboard-layout">
-  <!-- Keyboard -->
-  <div class="keyboard">
+<div class="keyboard-layout overflow-auto user-select-none w-100">
+  <div class="d-flex flex-column gap-1 w-100">
     @for (row of rows; track $index) {
-      <div class="keyboard-row">
+      <div class="keyboard-row d-flex gap-1 w-100">
         @for (keyDef of row; track keyDef.key) {
           <div
             class="key"
             [ngClass]="getKeyClasses(keyDef)"
-            [style.width]="keyWidth(keyDef.size)">
+            [style.flex]="keyFlex(keyDef.size)">
             {{ keyDef.label }}
           </div>
         }
       </div>
     }
-    <!-- Space bar row -->
-    <div class="keyboard-row space-row">
+    <div class="keyboard-row d-flex justify-content-center gap-1 w-100">
       <div
         class="key key-space finger-4"
-        [class.key-target]="isSpaceTarget()">
+        [class.key-target]="isSpaceTarget()"
+        [style.flex]="keyFlex(6)">
         Space
       </div>
     </div>
   </div>
 
-  <!-- Hands resting on home-row positions -->
-  <div class="hands">
-    <div class="hand">
-      <div class="hand-label">Left Hand</div>
-      <div class="fingers">
+  <div
+    class="hands d-flex justify-content-between align-items-start gap-3 mt-3 w-100">
+    <div class="hand flex-fill" style="max-width: 320px">
+      <div
+        class="hand-label text-center text-uppercase fw-bold text-body-secondary small mb-2">
+        Left Hand
+      </div>
+      <div class="d-flex justify-content-center gap-1">
         @for (slot of leftSlots; track slot.finger) {
           <div
             class="finger-slot"
             [ngClass]="'finger-' + slot.finger"
             [class.finger-active]="isFingerActive('left', slot.finger)">
-            <span class="finger-name">{{ slot.label }}</span>
-            <span class="finger-key">{{ slot.homeKey }}</span>
+            <span class="small fw-bold text-uppercase">{{ slot.label }}</span>
+            <span class="fs-5 fw-bold font-monospace mt-1">{{
+              slot.homeKey
+            }}</span>
           </div>
         }
       </div>
     </div>
 
-    <div class="hand">
-      <div class="hand-label">Right Hand</div>
-      <div class="fingers">
+    <div class="hand flex-fill" style="max-width: 320px">
+      <div
+        class="hand-label text-center text-uppercase fw-bold text-body-secondary small mb-2">
+        Right Hand
+      </div>
+      <div class="d-flex justify-content-center gap-1">
         @for (slot of rightSlots; track slot.finger) {
           <div
             class="finger-slot"
             [ngClass]="'finger-' + slot.finger"
             [class.finger-active]="isFingerActive('right', slot.finger)">
-            <span class="finger-name">{{ slot.label }}</span>
-            <span class="finger-key">{{ slot.homeKey }}</span>
+            <span class="small fw-bold text-uppercase">{{ slot.label }}</span>
+            <span class="fs-5 fw-bold font-monospace mt-1">{{
+              slot.homeKey
+            }}</span>
           </div>
         }
       </div>

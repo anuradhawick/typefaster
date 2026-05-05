@@ -122,6 +122,14 @@ export class WordsContainerComponent implements OnChanges {
     this.cd.detectChanges();
   }
 
+  /** Returns the current active rendered word, or null when there is none. */
+  get activeWord(): string | null {
+    if (!this.renderedWords || this.index >= this.renderedWords.length) {
+      return null;
+    }
+    return this.renderedWords[this.index];
+  }
+
   finish(): History {
     return this.history;
   }

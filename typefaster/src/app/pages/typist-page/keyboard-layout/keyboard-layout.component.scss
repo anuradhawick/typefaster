@@ -1,30 +1,21 @@
-// One CSS custom property per finger colour — inherited by child elements.
-// This avoids @each-generated repetition and keeps compiled output small.
-.finger-0 { --fc: #e74c3c; }
-.finger-1 { --fc: #e67e22; }
-.finger-2 { --fc: #27ae60; }
-.finger-3 { --fc: #2980b9; }
-.finger-4 { --fc: #8e44ad; }
-
-.keyboard-layout {
-  user-select: none;
-  overflow-x: auto;
+.finger-0 {
+  --fc: #e74c3c;
 }
 
-.keyboard {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: max-content;
+.finger-1 {
+  --fc: #e67e22;
 }
 
-.keyboard-row {
-  display: flex;
-  gap: 4px;
+.finger-2 {
+  --fc: #27ae60;
+}
 
-  &.space-row {
-    justify-content: center;
-  }
+.finger-3 {
+  --fc: #2980b9;
+}
+
+.finger-4 {
+  --fc: #8e44ad;
 }
 
 .key {
@@ -36,36 +27,32 @@
   border-radius: 4px;
   font-size: 0.72rem;
   font-weight: 500;
-  cursor: default;
-  flex-shrink: 0;
+  min-width: 0;
   background-color: #f8f9fa;
   color: #212529;
-  transition: background-color 0.12s ease, transform 0.1s ease, box-shadow 0.1s ease;
   position: relative;
-
-  // Small home-row bump indicator
-  &.key-home::after {
-    content: '';
-    position: absolute;
-    bottom: 3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: currentColor;
-    opacity: 0.55;
-  }
+  white-space: nowrap;
 }
 
-// Colour-code fingered keys using the inherited --fc variable
+.key.key-home::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0.55;
+}
+
 .key[class*='finger-'] {
   background-color: color-mix(in srgb, var(--fc) 12%, transparent);
   border-color: color-mix(in srgb, var(--fc) 45%, transparent);
   color: color-mix(in srgb, var(--fc) 65%, #000);
 }
 
-// Target-key highlight overrides the finger tint
 .key.key-target[class*='finger-'] {
   background-color: var(--fc);
   color: #fff;
@@ -77,39 +64,7 @@
 }
 
 .key-space {
-  width: 264px;
-}
-
-// ── Hands ──────────────────────────────────────────────
-
-.hands {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-top: 16px;
-  gap: 12px;
-  min-width: max-content;
-}
-
-.hand {
-  flex: 1;
-  max-width: 320px;
-}
-
-.hand-label {
-  text-align: center;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #6c757d;
-  margin-bottom: 8px;
-}
-
-.fingers {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
+  max-width: 40%;
 }
 
 .finger-slot {
@@ -122,17 +77,12 @@
   border-radius: 8px 8px 4px 4px;
   border: 2px solid #dee2e6;
   background-color: #f8f9fa;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 .finger-slot[class*='finger-'] {
   background-color: color-mix(in srgb, var(--fc) 12%, transparent);
   border-color: color-mix(in srgb, var(--fc) 45%, transparent);
-
-  .finger-name,
-  .finger-key {
-    color: color-mix(in srgb, var(--fc) 65%, #000);
-  }
+  color: color-mix(in srgb, var(--fc) 65%, #000);
 }
 
 .finger-slot.finger-active[class*='finger-'] {
@@ -140,23 +90,5 @@
   border-color: color-mix(in srgb, var(--fc) 75%, #000);
   transform: translateY(-10px);
   box-shadow: 0 6px 16px color-mix(in srgb, var(--fc) 45%, transparent);
-
-  .finger-name,
-  .finger-key {
-    color: #fff;
-  }
-}
-
-.finger-name {
-  font-size: 0.6rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.finger-key {
-  font-size: 1.1rem;
-  font-weight: 700;
-  font-family: monospace;
-  margin-top: 2px;
+  color: #fff;
 }
