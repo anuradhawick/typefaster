@@ -90,6 +90,7 @@ export class TypistPageComponent implements OnInit, OnDestroy {
     this.timer = new ReplaySubject();
     this.summary = null;
     this.word = '';
+    this.showKeyboard = false;
   }
 
   ngOnDestroy(): void {
@@ -105,6 +106,7 @@ export class TypistPageComponent implements OnInit, OnDestroy {
   }
 
   protected word: string = '';
+  protected showKeyboard: boolean = false;
 
   /**
    * The next keyboard key the user should press.
@@ -134,6 +136,7 @@ export class TypistPageComponent implements OnInit, OnDestroy {
         complete: () => {
           this.ended = true;
           this.summary = this.wordsContainer.finish();
+          this.showKeyboard = false;
         },
       });
     }

@@ -17,12 +17,21 @@
           [disabled]="ended" />
       </div>
     </div>
-    <div class="col-1 d-flex">
+    <div class="col-2 d-flex align-items-center gap-3">
       <button class="btn btn-primary btn-lg" (click)="reset()">
         <i class="bi bi-arrow-counterclockwise"></i>
       </button>
+      <div class="form-check form-switch mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="showKeyboard"
+          [(ngModel)]="showKeyboard" />
+        <label class="form-check-label" for="showKeyboard">Keyboard</label>
+      </div>
     </div>
-    <div class="col-4 d-flex align-items-center justify-content-end">
+    <div class="col-3 d-flex align-items-center justify-content-end">
       @if (ended) {
         <span class="fs-4">{{ 0 | date: 'mm:ss' : 'UTC' }}</span>
       } @else {
@@ -38,7 +47,9 @@
     <small>Press space/enter</small>
   </div>
 
-  <app-keyboard-layout [nextKey]="nextKey" />
+  @if (showKeyboard) {
+    <app-keyboard-layout [nextKey]="nextKey" />
+  }
 }
 
 @if (summary) {
