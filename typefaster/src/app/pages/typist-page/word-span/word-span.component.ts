@@ -1,12 +1,13 @@
 import {
   AfterViewInit,
+  afterNextRender,
   Component,
   ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
+  Injector,
+  effect,
   inject,
+  input,
+  output,
 } from '@angular/core';
 
 @Component({
@@ -16,19 +17,35 @@ import {
   templateUrl: './word-span.component.html',
   styleUrl: './word-span.component.scss',
 })
-export class WordSpanComponent implements AfterViewInit, OnChanges {
+export class WordSpanComponent implements AfterViewInit {
   private el = inject(ElementRef);
+  private injector = inject(Injector);
 
-  @Input({ required: true }) word: string;
-  @Input() active: boolean;
-  @Input() color: string;
-  @Output() lineChanged = new EventEmitter<void>();
+  word = input.required<string>();
+  active = input<boolean>(false);
+  color = input<string>('');
+  lineChanged = output<void>();
+
   private spanElement: HTMLElement;
 
-  ngOnChanges(): void {
-    if (this.spanElement && this.active && this.spanElement.offsetTop > 55) {
-      this.lineChanged.emit();
-    }
+  constructor() {
+    effect(() => {
+      const active = this.active();
+      this.word(); // track word changes so we re-check position after shifts
+      if (!this.spanElement || !active) {
+        return;
+      }
+      afterNextRender(
+        {
+          read: () => {
+            if (this.spanElement.offsetTop > 55) {
+              this.lineChanged.emit();
+            }
+          },
+        },
+        { injector: this.injector }
+      );
+    });
   }
 
   ngAfterViewInit(): void {

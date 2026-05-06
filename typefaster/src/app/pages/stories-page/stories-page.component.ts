@@ -1,6 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { StorySummaryEntry } from '../../interfaces/story';
 
 @Component({
@@ -10,13 +11,10 @@ import { StorySummaryEntry } from '../../interfaces/story';
   templateUrl: './stories-page.component.html',
   styleUrl: './stories-page.component.scss',
 })
-export class StoriesPageComponent implements OnInit {
+export class StoriesPageComponent {
   private http = inject(HttpClient);
-  protected stories: StorySummaryEntry[] = [];
-
-  ngOnInit(): void {
-    this.http
-      .get<StorySummaryEntry[]>('/assets/stories/summary.json')
-      .subscribe(stories => (this.stories = stories));
-  }
+  protected stories = toSignal(
+    this.http.get<StorySummaryEntry[]>('/assets/stories/summary.json'),
+    { initialValue: [] as StorySummaryEntry[] }
+  );
 }

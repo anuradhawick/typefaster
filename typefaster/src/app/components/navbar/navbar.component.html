@@ -10,12 +10,12 @@
       TypeFaster
     </a>
     <button
-      (click)="isMenuCollapsed = !isMenuCollapsed"
+      (click)="isMenuCollapsed.set(!isMenuCollapsed())"
       class="navbar-toggler"
       type="button">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+    <div [ngbCollapse]="isMenuCollapsed()" class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         @for (link of links; track $index) {
           <li [ngbNavItem]="link.fragment">
@@ -31,7 +31,7 @@
       </ul>
       <div ngbDropdown display="dynamic" class="navbar-nav d-inline-block">
         <span role="button" id="dark-mode" ngbDropdownToggle class="fs-5">
-          @switch (ts.userTheme) {
+          @switch (ts.userTheme()) {
             @case ('light') {
               <i class="bi bi-brightness-high-fill"></i>
             }

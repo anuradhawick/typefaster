@@ -13,6 +13,7 @@ describe('WordSpanComponent', () => {
 
     fixture = TestBed.createComponent(WordSpanComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('word', '');
     fixture.detectChanges();
   });
 

@@ -3,9 +3,9 @@
   style="height: 55px">
   <span
     class="fs-1"
-    [class.text-danger]="color === 'wrong'"
-    [class.text-success]="color === 'correct'"
-    [class.text-bg-info]="active"
-    >{{ word }}</span
+    [class.text-danger]="color() === 'wrong'"
+    [class.text-success]="color() === 'correct'"
+    [class.text-bg-info]="active()"
+    >{{ word() }}</span
   >&nbsp;&nbsp;
 </div>

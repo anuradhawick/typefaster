@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { StorySummaryEntry } from '../../../interfaces/story';
 import { TypistConfig } from '../../../interfaces/config';
 
@@ -16,11 +17,11 @@ import { TypistConfig } from '../../../interfaces/config';
   templateUrl: './setup.component.html',
   styleUrl: './setup.component.scss',
 })
-export class SetupComponent implements OnInit {
+export class SetupComponent {
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
 
-  @Output() configCompleted = new EventEmitter<TypistConfig>();
+  readonly configCompleted = output<TypistConfig>();
   protected form: FormGroup = this.fb.group({
     story: this.fb.control('1', [Validators.required]),
     case: this.fb.control(true, [Validators.required]),
@@ -28,11 +29,15 @@ export class SetupComponent implements OnInit {
     randomise: this.fb.control(false, [Validators.required]),
     time: this.fb.control(1, [Validators.min(1), Validators.max(5)]),
   });
-  protected stories: StorySummaryEntry[] = [];
+  protected stories = toSignal(
+    this.http.get<StorySummaryEntry[]>('/assets/stories/summary.json'),
+    { initialValue: [] as StorySummaryEntry[] }
+  );
 
-  ngOnInit(): void {
-    this.form.controls['story'].valueChanges.subscribe(
-      (story: string | number) => {
+  constructor() {
+    this.form.controls['story'].valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe((story: string | number) => {
         if (story === 'numbers') {
           this.form.controls['case'].disable();
           this.form.controls['special'].disable();
@@ -42,10 +47,6 @@ export class SetupComponent implements OnInit {
           this.form.controls['special'].enable();
           this.form.controls['randomise'].enable();
         }
-      }
-    );
-    this.http
-      .get<StorySummaryEntry[]>('/assets/stories/summary.json')
-      .subscribe(stories => (this.stories = stories));
+      });
   }
 }

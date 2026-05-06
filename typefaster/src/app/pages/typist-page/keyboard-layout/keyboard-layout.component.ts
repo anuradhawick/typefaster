@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 type Hand = 'left' | 'right';
@@ -190,26 +190,27 @@ const HOME_KEYS = new Set(['a', 's', 'd', 'f', 'j', 'k', 'l', ';']);
 })
 export class KeyboardLayoutComponent {
   /** The next key the user should press, or null when there is no active target. */
-  @Input() nextKey: string | null = null;
+  nextKey = input<string | null>(null);
 
   protected readonly rows = KEYBOARD_ROWS;
   protected readonly leftSlots = LEFT_FINGER_SLOTS;
   protected readonly rightSlots = RIGHT_FINGER_SLOTS;
 
   /** Normalises the input key to its base key identifier used in KEY_FINGER_MAP. */
-  private get normalizedKey(): string | null {
-    if (!this.nextKey) return null;
-    const k = this.nextKey;
+  private readonly normalizedKey = computed<string | null>(() => {
+    const k = this.nextKey();
+    if (!k) return null;
     return SHIFT_MAP[k] ?? k.toLowerCase();
-  }
+  });
 
-  private get activeAssignment(): FingerAssignment | null {
-    const k = this.normalizedKey;
+  private readonly activeAssignment = computed<FingerAssignment | null>(() => {
+    const k = this.normalizedKey();
     return k ? KEY_FINGER_MAP[k] ?? null : null;
-  }
+  });
 
   protected isKeyTarget(keyDef: KeyDef): boolean {
-    return !!this.normalizedKey && keyDef.key === this.normalizedKey;
+    const nk = this.normalizedKey();
+    return !!nk && keyDef.key === nk;
   }
 
   protected isHomeKey(keyDef: KeyDef): boolean {
@@ -237,11 +238,11 @@ export class KeyboardLayoutComponent {
   }
 
   protected isFingerActive(hand: Hand, finger: number): boolean {
-    const a = this.activeAssignment;
+    const a = this.activeAssignment();
     return !!a && a.hand === hand && a.finger === finger;
   }
 
   protected isSpaceTarget(): boolean {
-    return this.normalizedKey === ' ';
+    return this.normalizedKey() === ' ';
   }
 }

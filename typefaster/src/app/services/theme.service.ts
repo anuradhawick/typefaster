@@ -1,27 +1,25 @@
-import { Injectable, afterNextRender } from '@angular/core';
+import { Injectable, afterNextRender, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ThemeService {
-  userTheme = 'system';
+  readonly userTheme = signal('system');
   systemTheme = new BehaviorSubject('system');
 
   constructor() {
     afterNextRender({
       mixedReadWrite: () => {
         // restore user choice
-        this.userTheme = localStorage.getItem('theme') || 'system';
-        if (this.userTheme !== 'system') {
-          (document.body as HTMLElement).setAttribute(
-            'data-bs-theme',
-            this.userTheme
-          );
+        const saved = localStorage.getItem('theme') || 'system';
+        this.userTheme.set(saved);
+        if (saved !== 'system') {
+          (document.body as HTMLElement).setAttribute('data-bs-theme', saved);
         }
-        // if user choice is sytem use it
+        // if user choice is system use it
         this.systemTheme.subscribe(theme => {
-          if (this.userTheme === 'system') {
+          if (this.userTheme() === 'system') {
             (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
           }
         });
@@ -32,13 +30,13 @@ export class ThemeService {
 
   activate(theme: string) {
     localStorage.setItem('theme', theme);
-    this.userTheme = theme;
-    if (this.userTheme !== 'system') {
+    this.userTheme.set(theme);
+    if (theme !== 'system') {
       (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
     } else {
       const matchDarkMedia = window.matchMedia('(prefers-color-scheme: dark)');
-      const theme = matchDarkMedia.matches ? 'dark' : 'light';
-      (document.body as HTMLElement).setAttribute('data-bs-theme', theme);
+      const t = matchDarkMedia.matches ? 'dark' : 'light';
+      (document.body as HTMLElement).setAttribute('data-bs-theme', t);
     }
   }
 

@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { switchMap } from 'rxjs';
 import { StoryEntry } from '../../interfaces/story';
 
 @Component({
@@ -12,24 +13,14 @@ import { StoryEntry } from '../../interfaces/story';
   templateUrl: './story-page.component.html',
   styleUrl: './story-page.component.scss',
 })
-export class StoryPageComponent implements OnInit, OnDestroy {
+export class StoryPageComponent {
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
-  protected story: StoryEntry;
-  private queryParamsSubscription: Subscription;
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const index = params.get('id');
-      this.http
-        .get<StoryEntry>(`/assets/stories/${index}.json`)
-        .subscribe(story => (this.story = story));
-    });
-  }
-
-  ngOnDestroy(): void {
-    if (this.queryParamsSubscription) {
-      this.queryParamsSubscription.unsubscribe();
-    }
-  }
+  protected story = toSignal(
+    this.route.paramMap.pipe(
+      switchMap(params =>
+        this.http.get<StoryEntry>(`/assets/stories/${params.get('id')}.json`)
+      )
+    )
+  );
 }

@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  inject,
-} from '@angular/core';
+import { Component, computed, effect, input, signal } from '@angular/core';
 import { WordSpanComponent } from '../word-span/word-span.component';
 import { History } from '../../../interfaces/typist';
 
@@ -16,16 +9,16 @@ import { History } from '../../../interfaces/typist';
   templateUrl: './words-container.component.html',
   styleUrl: './words-container.component.scss',
 })
-export class WordsContainerComponent implements OnChanges {
-  private cd = inject(ChangeDetectorRef);
+export class WordsContainerComponent {
+  words = input.required<string[]>();
 
-  @Input({ required: true }) words: string[];
-  protected renderedWords: string[] = [];
-  protected typedWords: string[] = [];
-  protected index = 0;
-  protected peek = '';
+  protected renderedWords = signal<string[]>([]);
+  protected index = signal(0);
+
+  private typedWords: string[] = [];
+  private peek = signal('');
   private wordOffset = 0;
-  private windowSize = 50;
+  private readonly windowSize = 50;
   private time: number = -1;
   private history: History = {
     typed: [],
@@ -33,12 +26,20 @@ export class WordsContainerComponent implements OnChanges {
     time: [],
   };
 
+  constructor() {
+    // Initialise the rendered window whenever the word list changes.
+    effect(() => {
+      this.renderedWords.set(this.words().slice(0, this.windowSize));
+    });
+  }
+
   reset() {
-    this.renderedWords = this.words.slice(0, this.windowSize);
+    this.renderedWords.set(this.words().slice(0, this.windowSize));
     this.typedWords = [];
-    this.index = 0;
+    this.index.set(0);
     this.time = -1;
-    this.peek = '';
+    this.peek.set('');
+    this.wordOffset = 0;
     this.history = {
       typed: [],
       rendered: [],
@@ -46,25 +47,18 @@ export class WordsContainerComponent implements OnChanges {
     };
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.renderedWords = changes['words'].currentValue.slice(
-      0,
-      this.windowSize
-    );
-  }
-
   pushWord(word: string) {
-    this.peek = '';
+    this.peek.set('');
     this.typedWords.push(word);
     this.history.time.push(Date.now() - this.time);
     this.history.typed.push(word);
-    this.history.rendered.push(this.renderedWords[this.index]);
+    this.history.rendered.push(this.renderedWords()[this.index()]);
     this.time = Date.now();
-    this.index++;
+    this.index.update(i => i + 1);
   }
 
   peekWord(word: string) {
-    this.peek = word;
+    this.peek.set(word);
     if (this.time < 0) {
       this.time = Date.now();
     }
@@ -78,57 +72,50 @@ export class WordsContainerComponent implements OnChanges {
   }
 
   evaluateWord(index: number): string {
-    // check typed words
-    if (index < this.index) {
-      if (this.compare(this.typedWords[index], this.renderedWords[index])) {
-        return 'correct';
-      } else {
-        return 'wrong';
-      }
+    const currentIndex = this.index();
+    const rendered = this.renderedWords();
+    const peek = this.peek();
+
+    if (index < currentIndex) {
+      return this.compare(this.typedWords[index], rendered[index])
+        ? 'correct'
+        : 'wrong';
     }
-    // skip future words
-    if (index > this.index) {
+    if (index > currentIndex) {
       return '';
     }
-    // if there is a word to take a peek at and it is correct
-    if (this.peek.length > 0) {
-      if (!this.compare(this.peek, this.renderedWords[this.index], true)) {
-        return 'wrong';
-      } else {
-        return '';
-      }
+    if (peek.length > 0) {
+      return this.compare(peek, rendered[currentIndex], true) ? '' : 'wrong';
     }
-
     return '';
   }
 
   shift(index: number) {
     this.typedWords = [];
-    this.renderedWords = this.words.slice(
+    const words = this.words();
+    let sliced = words.slice(
       this.wordOffset + index,
       this.wordOffset + index + this.windowSize
     );
 
-    if (this.renderedWords.length < this.windowSize) {
+    if (sliced.length < this.windowSize) {
       this.wordOffset = 0;
-      this.renderedWords = [
-        ...this.renderedWords,
-        ...this.words.slice(0, this.windowSize - this.renderedWords.length),
-      ];
+      sliced = [...sliced, ...words.slice(0, this.windowSize - sliced.length)];
     } else {
       this.wordOffset += index;
     }
-    this.index = 0;
-    this.cd.detectChanges();
+
+    this.renderedWords.set(sliced);
+    this.index.set(0);
   }
 
-  /** Returns the current active rendered word, or null when there is none. */
-  get activeWord(): string | null {
-    if (!this.renderedWords || this.index >= this.renderedWords.length) {
-      return null;
-    }
-    return this.renderedWords[this.index];
-  }
+  /** Signal with the current active rendered word, or null when there is none. */
+  readonly activeWord = computed<string | null>(() => {
+    const words = this.renderedWords();
+    const idx = this.index();
+    if (!words || idx >= words.length) return null;
+    return words[idx];
+  });
 
   finish(): History {
     return this.history;

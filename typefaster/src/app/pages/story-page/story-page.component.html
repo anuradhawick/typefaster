@@ -1,11 +1,11 @@
-@if (story) {
+@if (story()) {
   <div class="col-12">
     <div class="text-center">
-      <h4>{{ story.title }}</h4>
+      <h4>{{ story()!.title }}</h4>
     </div>
     <hr />
     <ngb-carousel [interval]="5000" class="mx-auto">
-      @for (image of story.images; track image) {
+      @for (image of story()!.images; track image) {
         <ng-template ngbSlide>
           <img
             [src]="image"
@@ -17,11 +17,11 @@
     <br />
     <strong>Prompt</strong>
     <p>
-      {{ story.prompt }}
+      {{ story()!.prompt }}
     </p>
     <strong>Story</strong>
     <p>
-      {{ story.story }}
+      {{ story()!.story }}
     </p>
   </div>
 }

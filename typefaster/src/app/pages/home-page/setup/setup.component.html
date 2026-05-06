@@ -6,7 +6,7 @@
       formControlName="story"
       id="story">
       <option [value]="'numbers'">Practice typing numbers</option>
-      @for (story of stories; track $index) {
+      @for (story of stories(); track $index) {
         <option [value]="story.index">{{ story.title }}</option>
       }
     </select>

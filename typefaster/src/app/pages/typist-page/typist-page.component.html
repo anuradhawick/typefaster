@@ -1,6 +1,6 @@
-@if (story) {
+@if (story()) {
   <div class="border border-3 border-primary-subtle rounded-3">
-    <app-words-container #wordsContainer [words]="words" />
+    <app-words-container #wordsContainer [words]="words()" />
   </div>
 
   <div class="row mt-1 mt-sm-4">
@@ -9,12 +9,12 @@
         class="input-group input-group-lg border border-3 border-primary-subtle rounded-3">
         <input
           #input
-          [value]="word"
-          [type]="kind"
+          [value]="word()"
+          [type]="kind()"
           class="form-control force-text"
           (keyup)="typing($event)"
           (keydown)="keydown($event)"
-          [disabled]="ended" />
+          [disabled]="ended()" />
       </div>
     </div>
     <div class="col-2 d-flex align-items-center gap-3">
@@ -27,17 +27,19 @@
           type="checkbox"
           role="switch"
           id="showKeyboard"
-          [(ngModel)]="showKeyboard" />
+          [ngModel]="showKeyboard()"
+          (ngModelChange)="showKeyboard.set($event)" />
         <label class="form-check-label" for="showKeyboard">Keyboard</label>
       </div>
     </div>
     <div class="col-3 d-flex align-items-center justify-content-end">
-      @if (ended) {
+      @if (ended()) {
         <span class="fs-4">{{ 0 | date: 'mm:ss' : 'UTC' }}</span>
       } @else {
         <span class="fs-4">
           {{
-            1000 * (timer | async)! || time * 1000 * 60 | date: 'mm:ss' : 'UTC'
+            ((countdown() ?? 0) * 1000) || time() * 1000 * 60
+              | date: 'mm:ss' : 'UTC'
           }}</span
         >
       }
@@ -47,12 +49,12 @@
     <small>Press space/enter</small>
   </div>
 
-  @if (showKeyboard) {
-    <app-keyboard-layout [nextKey]="nextKey" />
+  @if (showKeyboard()) {
+    <app-keyboard-layout [nextKey]="nextKey()" />
   }
 }
 
-@if (summary) {
+@if (summary(); as s) {
   <br />
   <h3>Summary of your performance</h3>
   <table class="table table-striped user-select-none">
@@ -65,23 +67,23 @@
     <tbody>
       <tr>
         <th>Total words faced</th>
-        <td class="text-center">{{ summary.rendered.length }}</td>
+        <td class="text-center">{{ s.rendered.length }}</td>
       </tr>
       <tr>
         <th>Correct words</th>
-        <td class="text-center">{{ correctWords(summary) }}</td>
+        <td class="text-center">{{ correctWords(s) }}</td>
       </tr>
       <tr>
         <th>Total time</th>
         <td class="text-center">
-          {{ totalTime(summary) | date: 'mm:ss.SSS' : 'UTC' }}
+          {{ totalTime(s) | date: 'mm:ss.SSS' : 'UTC' }}
         </td>
       </tr>
       <tr>
         <th>Words per minute</th>
         <td class="text-center">
           {{
-            (1000 * 60 * correctWords(summary)) / totalTime(summary)
+            (1000 * 60 * correctWords(s)) / totalTime(s)
               | number: '.3-3'
           }}
         </td>
@@ -104,25 +106,24 @@
       </tr>
     </thead>
     <tbody>
-      @for (_ of summary.time; track $index) {
+      @for (_ of s.time; track $index) {
         <tr>
           <th scope="row">{{ $index + 1 }}</th>
           <td class="text-center">
-            {{ summary.rendered[$index] }}
+            {{ s.rendered[$index] }}
           </td>
-          <td class="text-center">{{ summary.typed[$index] }}</td>
+          <td class="text-center">{{ s.typed[$index] }}</td>
           <td class="text-center">
-            {{ summary.time[$index] | date: 'mm:ss.SSS' : 'UTC' }}
+            {{ s.time[$index] | date: 'mm:ss.SSS' : 'UTC' }}
           </td>
           <td
             class="text-center"
             [class]="{
-              'text-success':
-                summary.typed[$index] === summary.rendered[$index],
-              'text-danger': summary.typed[$index] !== summary.rendered[$index]
+              'text-success': s.typed[$index] === s.rendered[$index],
+              'text-danger': s.typed[$index] !== s.rendered[$index]
             }">
             {{
-              summary.typed[$index] === summary.rendered[$index] ? 'Yes' : 'No'
+              s.typed[$index] === s.rendered[$index] ? 'Yes' : 'No'
             }}
           </td>
         </tr>

@@ -13,6 +13,7 @@ describe('WordsContainerComponent', () => {
 
     fixture = TestBed.createComponent(WordsContainerComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('words', []);
     fixture.detectChanges();
   });
 
